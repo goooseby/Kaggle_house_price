@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE/editor
+.idea/
+.vscode/
+
+# Kaggle raw data and generated artifacts
+house-prices-advanced-regression-techniques/
+outputs/
+
+# OS files
+.DS_Store
+Thumbs.db
