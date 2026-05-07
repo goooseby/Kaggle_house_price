@@ -1,0 +1,13 @@
+﻿feature,top_value,top_pct,unique_values
+Utilities,AllPub,99.93,2
+Street,Pave,99.59,2
+PoolArea,0,99.52,8
+PoolQC,nan,99.52,4
+Condition2,Norm,98.97,8
+3SsnPorch,0,98.36,20
+RoofMatl,CompShg,98.22,8
+LowQualFinSF,0,98.22,24
+Heating,GasA,97.81,6
+MiscVal,0,96.44,21
+MiscFeature,nan,96.3,5
+KitchenAbvGr,1,95.34,4

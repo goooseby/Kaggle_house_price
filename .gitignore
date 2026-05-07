@@ -18,6 +18,8 @@ env/
 # Kaggle raw data and generated artifacts
 house-prices-advanced-regression-techniques/
 outputs/
+submissions/*.csv
+reports/generated/
 
 # OS files
 .DS_Store

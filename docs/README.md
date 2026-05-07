@@ -21,6 +21,8 @@
 - [03_baseline_pipeline.md](03_baseline_pipeline.md)：当前 baseline 的完整流程
 - [04_results_report.md](04_results_report.md)：当前模型表现、输出文件和结果解释
 - [05_next_steps.md](05_next_steps.md)：后续优化路线
+- [06_full_optimization_plan.md](06_full_optimization_plan.md)：下一轮完整优化计划
+- [07_environment_setup.md](07_environment_setup.md)：下一轮优化所需环境
 
 ## 当前入口
 
@@ -39,3 +41,12 @@ python main.py
 ## 当前阶段
 
 当前阶段不是追求最终最高分，而是先建立一个可靠、可复现、可解释的建模流程。这个流程跑通后，后面调参、换模型、加特征才有稳定的比较基准。
+
+## 当前提交反馈
+
+第一版 baseline 已提交 Kaggle：
+
+- Public Score: `0.12859`
+- 排名约前 `30%`
+
+下一步不再做小修小补，而是进行一个完整优化回合：验证体系、特征工程、强模型、调参、融合和候选提交一起推进。
