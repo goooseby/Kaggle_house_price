@@ -32,3 +32,5 @@ submissions/20260507_blend_clipped.csv
 当前候选文件说明：
 
 - [20260506_candidates.md](20260506_candidates.md)
+- [calibration_20260507/README.md](calibration_20260507/README.md)
+- [model_redesign_20260507/README.md](model_redesign_20260507/README.md)

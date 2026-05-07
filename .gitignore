@@ -19,6 +19,7 @@ env/
 house-prices-advanced-regression-techniques/
 outputs/
 submissions/*.csv
+submissions/**/*.csv
 reports/generated/
 
 # OS files

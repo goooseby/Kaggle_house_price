@@ -27,6 +27,11 @@ reports/20260507_optimization_round_report.md
 ## 当前报告
 
 - [20260506_optimization_round_report.md](20260506_optimization_round_report.md)：完整优化回合报告
+- [20260507_calibration_round_report.md](20260507_calibration_round_report.md)：高价校准与保守融合实验报告
+- [20260507_calibration_feedback_review.md](20260507_calibration_feedback_review.md)：高价校准提交反馈复盘
+- [20260507_validation_audit_report.md](20260507_validation_audit_report.md)：本地验证与 Public Score 审计报告
+- [modeling/20260507_model_redesign_plan.md](modeling/20260507_model_redesign_plan.md)：新一轮模型重设计方案
+- [modeling/20260507_target_encoding_experiment_report.md](modeling/20260507_target_encoding_experiment_report.md)：Target Encoding 正式实验报告
 - [eda/20260506_full_eda_report.md](eda/20260506_full_eda_report.md)：完整探索性分析报告
 - [eda/20260506_eda_visual_guide.md](eda/20260506_eda_visual_guide.md)：EDA 图表导览报告
 
