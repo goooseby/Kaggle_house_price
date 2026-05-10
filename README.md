@@ -12,7 +12,6 @@
 - baseline 建模与第一次提交：Public Score `0.12859`
 - 高级特征工程、OOF 融合与裁剪校准：最好到 `0.11805`
 - EDA 补充：完整报告、图表、统计表已落盘
-- 本地 CV 与 Public Score 差异审计：确定后续不能只看普通 CV
 - Target Encoding 模型重设计实验：当前最好到 `0.11765`
 
 最新结论：Target Encoding 单独替代旧方案并不明显，但它和当前最好方案做 50/50 log 融合后带来了有效增量。
@@ -23,8 +22,8 @@
 - [报告总索引](reports/README.md)
 - [提交文件索引](submissions/README.md)
 - [实验记录](experiments/experiment_log.csv)
+- [期末报告最终版](reports/final_report/final_report.md)
 - [EDA 图表导览](reports/eda/20260506_eda_visual_guide.md)
-- [模型重设计方案](reports/modeling/20260507_model_redesign_plan.md)
 - [Target Encoding 实验报告](reports/modeling/20260507_target_encoding_experiment_report.md)
 
 ## 常用命令
@@ -41,18 +40,12 @@ conda run -n kaggle_house python run_target_encoding_experiment.py
 conda run -n kaggle_house python scripts/generate_full_eda_report.py
 ```
 
-重新审计本地验证与 Public Score：
-
-```powershell
-conda run -n kaggle_house python scripts/audit_validation_metrics.py
-```
-
 ## 目录说明
 
 ```text
 house_price/       核心代码模块
-scripts/           分析、审计、候选生成脚本
-experiments/       实验中间结果、评分面板、OOF 预测
+scripts/           分析、候选生成和报告材料脚本
+experiments/       实验中间结果、CV 记录、OOF 预测
 reports/           人工整理后的报告和复盘
 reports/eda/       EDA 报告、图表、统计表
 submissions/       Kaggle 候选提交文件和说明
@@ -73,4 +66,4 @@ Target Encoding 本轮已提交并验证：
 
 ## 下一步方向
 
-下一轮不建议继续微调裁剪比例。更高价值方向是扩大模型差异性，例如 CatBoost 原生类别特征、不同特征空间的模型族融合、稳健 stacking，以及继续用新评分面板约束高价尾部风险。
+下一轮不建议继续微调裁剪比例。更高价值方向是扩大模型差异性，例如 CatBoost 原生类别特征、不同特征空间的模型族融合，以及稳健的多源融合。

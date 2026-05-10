@@ -1,0 +1,3 @@
+﻿dataset,features_with_missing,missing_cells,missing_cell_pct,top_missing_features
+train,19,7829,6.6202,PoolQC:1453; MiscFeature:1406; Alley:1369; Fence:1179; MasVnrType:872; FireplaceQu:690; LotFrontage:259; GarageType:81
+test,33,7878,6.7495,PoolQC:1456; MiscFeature:1408; Alley:1352; Fence:1169; MasVnrType:894; FireplaceQu:730; LotFrontage:227; GarageQual:78

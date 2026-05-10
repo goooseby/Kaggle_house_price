@@ -26,7 +26,7 @@
 
 ## 选择原则
 
-优先看实验报告中的评分面板；提交时优先考虑 `conservative`、`weighted`、`clip_q993` 和 `mix_current_best` 这些更稳的版本。
+最终以 Kaggle Public Score 判断好坏；提交时优先考虑 `conservative`、`weighted`、`clip_q993` 和 `mix_current_best` 这些更稳的版本。
 
 ## Public Score 反馈
 

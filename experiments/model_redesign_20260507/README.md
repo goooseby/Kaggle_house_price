@@ -6,15 +6,10 @@
 
 核心原则：
 
-- 每个模型必须输出新的评分面板。
-- 每个模型必须保存 OOF 预测和测试集预测。
-- 每个候选提交必须记录预测分布风险。
-- 不再只看普通 CV RMSE。
-
-计划详见：
-
-- `reports/modeling/20260507_model_redesign_plan.md`
+- 每个正式候选都必须能追溯到生成脚本和输入文件。
+- 本地 CV 只作为训练过程记录。
+- 最终方案好坏以 Kaggle Public Score 为准。
 
 ## 当前已执行主题
 
-- `target_encoding/`：OOF Target Encoding + 新评分面板实验。
+- `target_encoding/`：OOF Target Encoding 实验。

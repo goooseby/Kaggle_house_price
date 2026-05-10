@@ -19,7 +19,6 @@ from house_price.advanced_preprocessing import build_advanced_feature_matrix
 from house_price.config import DEFAULT_DATA_DIR, PROJECT_ROOT, RANDOM_STATE
 from house_price.data import load_raw_data, remove_known_outliers
 from house_price.target_encoding import build_oof_target_encoding_features
-from house_price.validation import evaluate_log_oof_predictions, summarize_test_predictions
 
 
 EXPERIMENT_DIR = PROJECT_ROOT / "experiments" / "model_redesign_20260507" / "target_encoding"
@@ -55,14 +54,9 @@ def main() -> None:
         oof, test_pred = _fit_oof(model, x_train, target_log, x_test, folds)
         oof_predictions[name] = oof
         test_predictions[name] = test_pred
-        row = {
-            "candidate": name,
-            "kind": "single_model",
-            **evaluate_log_oof_predictions(target_log, oof, train_sale_price),
-            **summarize_test_predictions(np.expm1(test_pred), train_sale_price),
-        }
+        row = {"candidate": name, "kind": "single_model", "cv_rmse": _rmse(target_log, oof)}
         model_rows.append(row)
-        print(f"{name}: cv={row['cv_rmse']:.5f}, tail5={row['tail_rmse_top_5pct']:.5f}")
+        print(f"{name}: cv={row['cv_rmse']:.5f}")
 
     blend_rows, blend_predictions, blend_oof = _build_blends(
         oof_predictions,
@@ -70,8 +64,8 @@ def main() -> None:
         target_log,
         train_sale_price,
     )
-    score_panel = pd.DataFrame(model_rows + blend_rows).sort_values("cv_rmse")
-    score_panel.to_csv(EXPERIMENT_DIR / "score_panel.csv", index=False, encoding="utf-8-sig")
+    result_table = pd.DataFrame(model_rows + blend_rows).sort_values("cv_rmse")
+    result_table.to_csv(EXPERIMENT_DIR / "model_cv_results.csv", index=False, encoding="utf-8-sig")
 
     _write_prediction_files(oof_predictions, test_predictions, blend_oof, blend_predictions)
     submission_paths = _write_submissions(
@@ -80,10 +74,10 @@ def main() -> None:
         test_ids,
         train_sale_price,
     )
-    _write_report(score_panel, submission_paths, te_features.train.columns.tolist())
+    _write_report(result_table, submission_paths, te_features.train.columns.tolist())
     _write_navigation_readmes(submission_paths)
 
-    print(f"Score panel: {EXPERIMENT_DIR / 'score_panel.csv'}")
+    print(f"CV results: {EXPERIMENT_DIR / 'model_cv_results.csv'}")
     print(f"Report: {REPORT_PATH}")
     print("Candidate submissions:")
     for name, path in submission_paths.items():
@@ -195,8 +189,7 @@ def _build_blends(
                 "candidate": name,
                 "kind": "blend",
                 "weights": _format_weights(selected, weights),
-                **evaluate_log_oof_predictions(target_log, oof, train_sale_price),
-                **summarize_test_predictions(np.expm1(test_pred), train_sale_price),
+                "cv_rmse": _rmse(target_log, oof),
             }
         )
     return rows, blend_predictions, blend_oof
@@ -270,7 +263,7 @@ def _write_submission(sample_submission: pd.DataFrame, test_ids: pd.Series, pred
     return path
 
 
-def _write_report(score_panel: pd.DataFrame, submission_paths: dict[str, Path], te_columns: list[str]) -> None:
+def _write_report(result_table: pd.DataFrame, submission_paths: dict[str, Path], te_columns: list[str]) -> None:
     recommended = [
         "te_conservative_blend_clip_q993",
         "te_weighted_blend_clip_q993",
@@ -281,7 +274,7 @@ def _write_report(score_panel: pd.DataFrame, submission_paths: dict[str, Path], 
         "",
         "## 1. 实验目的",
         "",
-        "本轮正式执行“Target Encoding + 新评分面板”的模型改造主题。",
+        "本轮正式执行 Target Encoding 模型改造主题。",
         "",
         "目标不是继续微调上一轮 q993 裁剪比例，而是验证：类别变量的目标均值信息是否能给现有高级特征体系带来结构性增量。",
         "",
@@ -323,13 +316,13 @@ def _write_report(score_panel: pd.DataFrame, submission_paths: dict[str, Path], 
         "- `_clip_q993`：按训练集 SalePrice 的 99.3% 分位数做硬裁剪，沿用上一轮已验证更稳的高价控制策略。",
         "- `_mix_current_best_clip_q993`：先做 q993 裁剪，再与当前公开最好文件 `20260507_opt_clip_q993.csv` 做 50/50 log 融合，用于测试 TE 是否提供增量信息。",
         "",
-        "## 3. 新评分面板",
+        "## 3. 本地训练记录",
         "",
-        "本轮仍保留普通 OOF CV RMSE，但不再只用它排序。重点同时查看高价段误差、尾部分布、测试集最大值、q993/q997 以上预测数量与超额幅度。",
+        "下表记录本轮单模型与融合模型的 OOF CV RMSE。它只用于训练阶段参考，最终优劣仍以 Kaggle Public Score 为准。",
         "",
-        "排序表：",
+        "CV 记录：",
         "",
-        _markdown(score_panel.head(20)),
+        _markdown(result_table),
         "",
         "## 4. 候选提交文件",
         "",
@@ -357,13 +350,12 @@ def _write_report(score_panel: pd.DataFrame, submission_paths: dict[str, Path], 
         "",
         "- 训练入口：`run_target_encoding_experiment.py`",
         "- Target Encoding 特征：`house_price/target_encoding.py`",
-        "- 新评分函数：`house_price/validation.py`",
         f"- 实验中间产物：`{EXPERIMENT_DIR.relative_to(PROJECT_ROOT)}`",
         f"- 提交候选文件：`{SUBMISSION_DIR.relative_to(PROJECT_ROOT)}`",
         "",
         "## 7. 初步结论",
         "",
-        "本轮 TE 方案需要和上一轮 optimized 融合一起判断。若本轮最优融合 CV 没有明显超过上一轮约 `0.10609` 的水平，则 TE 不应被视为直接替代方案。",
+        "本轮 TE 方案需要用 Kaggle Public Score 和上一轮 optimized 融合一起判断。若纯 TE 提交不能超过上一轮最好，则不能把 TE 视为直接替代方案。",
         "",
         "本轮最关键的验证不是原始 TE 文件，而是：TE q993 裁剪版是否接近当前最好成绩，以及 TE 与当前最好文件的 50/50 log 融合是否能提供增量。",
         "",
@@ -382,7 +374,7 @@ def _write_navigation_readmes(submission_paths: dict[str, Path]) -> None:
                 "",
                 "## 文件说明",
                 "",
-                "- `score_panel.csv`：本轮所有单模型与融合模型的新评分面板。",
+                "- `model_cv_results.csv`：本轮所有单模型与融合模型的 OOF CV 记录。",
                 "- `oof_predictions.csv`：训练集 OOF log 预测，用于后续融合、诊断和评分校准。",
                 "- `test_log_predictions.csv`：测试集 log 预测，用于生成提交文件。",
                 "",
@@ -420,7 +412,7 @@ def _write_navigation_readmes(submission_paths: dict[str, Path]) -> None:
                 "",
                 "## 选择原则",
                 "",
-                "优先看实验报告中的评分面板；提交时优先考虑 `conservative`、`weighted`、`clip_q993` 和 `mix_current_best` 这些更稳的版本。",
+                "最终以 Kaggle Public Score 判断好坏；提交时优先考虑 `conservative`、`weighted`、`clip_q993` 和 `mix_current_best` 这些更稳的版本。",
             ]
         ),
         encoding="utf-8",
@@ -429,6 +421,10 @@ def _write_navigation_readmes(submission_paths: dict[str, Path]) -> None:
 
 def _format_weights(model_names: list[str], weights: np.ndarray) -> str:
     return "; ".join(f"{name}:{weight:.4f}" for name, weight in zip(model_names, weights))
+
+
+def _rmse(y_true: pd.Series | np.ndarray, y_pred: np.ndarray) -> float:
+    return float(np.mean((np.asarray(y_true) - y_pred) ** 2) ** 0.5)
 
 
 def _markdown(df: pd.DataFrame) -> str:

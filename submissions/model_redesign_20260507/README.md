@@ -4,7 +4,7 @@
 
 ## 子目录
 
-- `target_encoding/`：OOF Target Encoding + 新评分面板实验。
+- `target_encoding/`：OOF Target Encoding 实验。
 
 ## 使用原则
 

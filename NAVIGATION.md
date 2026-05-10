@@ -9,7 +9,7 @@
 
 - `main.py`：基础入口，保留早期基线流程。
 - `run_optimization.py`：上一轮高级特征、模型融合与校准候选生成入口。
-- `run_target_encoding_experiment.py`：当前正式实验入口，执行 OOF Target Encoding + 新评分面板。
+- `run_target_encoding_experiment.py`：当前正式实验入口，执行 OOF Target Encoding 并生成提交候选。
 
 ## 核心代码
 
@@ -18,19 +18,17 @@
 - `house_price/modeling.py`：早期建模工具。
 - `house_price/advanced_modeling.py`：上一轮高级模型与融合工具。
 - `house_price/target_encoding.py`：当前新增的 OOF Target Encoding 特征。
-- `house_price/validation.py`：新评分面板，包括 CV、尾部风险、预测分布诊断。
 
 ## 实验目录
 
-- `experiments/validation_audit_20260507/`：本地 CV 与 Kaggle Public Score 的差异审计。
 - `experiments/model_redesign_20260507/`：新一轮大改模型方案的实验根目录。
 - `experiments/model_redesign_20260507/target_encoding/`：当前 Target Encoding 实验产物。
 
 ## 报告目录
 
 - `reports/README.md`：报告总索引。
+- `reports/final_report/final_report.md`：期末报告最终合并版。
 - `reports/eda/`：完整 EDA 报告、图表、统计表。
-- `reports/modeling/20260507_model_redesign_plan.md`：新一轮模型设计计划。
 - `reports/modeling/20260507_target_encoding_experiment_report.md`：当前 Target Encoding 实验报告。
 
 ## 提交候选目录

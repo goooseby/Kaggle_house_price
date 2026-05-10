@@ -1,0 +1,11 @@
+﻿item,value,note
+raw_train_rows,1460,原始训练样本数
+raw_test_rows,1459,原始测试样本数
+raw_feature_columns,80,不含 SalePrice
+outlier_removed_train_rows,1458,删除两个经典异常点后的训练样本数
+advanced_raw_feature_columns,448,不删异常点时高级预处理后的特征数
+advanced_clean_train_rows,1458,正式建模使用的训练样本数
+advanced_clean_test_rows,1459,正式建模使用的测试样本数
+advanced_clean_feature_columns,447,正式建模使用的高级预处理特征数
+skew_transformed_columns,27,执行 log1p 偏态修正的数值列数
+missing_indicator_columns,34,缺失指示器特征数

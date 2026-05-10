@@ -1,0 +1,11 @@
+candidate,kind,cv_rmse,weights
+te_weighted_blend,blend,0.10652681501313734,"te_elastic_net:0.3051; te_ridge:0.0000; te_svr:0.3500; te_xgboost:0.2864; te_catboost:0.0586"
+te_conservative_blend,blend,0.10675731498121786,"te_elastic_net:0.2525; te_ridge:0.1000; te_svr:0.2750; te_xgboost:0.2432; te_catboost:0.1293"
+te_simple_blend,blend,0.10710829246879541,"te_elastic_net:0.2000; te_ridge:0.2000; te_svr:0.2000; te_xgboost:0.2000; te_catboost:0.2000"
+te_svr,single_model,0.11019420416016494,
+te_elastic_net,single_model,0.11074175921858992,
+te_ridge,single_model,0.11182706758218254,
+te_catboost,single_model,0.11285512254181602,
+te_xgboost,single_model,0.11307010616515038,
+te_kernel_ridge,single_model,0.11337980836742437,
+te_lightgbm,single_model,0.11593854883541074,
