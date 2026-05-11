@@ -21,6 +21,8 @@ def main() -> None:
     _plot_public_score_progress(summary)
     _plot_stage_improvements(summary)
     _plot_submitted_candidate_ranking(log)
+    _plot_clipping_threshold_curve(log)
+    _plot_te_blend_comparison(log)
 
 
 def _plot_public_score_progress(summary: pd.DataFrame) -> None:
@@ -118,6 +120,89 @@ def _plot_submitted_candidate_ranking(log: pd.DataFrame) -> None:
 
     fig.tight_layout()
     fig.savefig(FIGURE_DIR / "submitted_candidate_ranking.png", dpi=180)
+    plt.close(fig)
+
+
+def _plot_clipping_threshold_curve(log: pd.DataFrame) -> None:
+    data = log.dropna(subset=["kaggle_public_score"]).copy()
+    data = data[data["experiment"].str.match(r"20260507_opt_clip_q\d{3}$", na=False)]
+    data["quantile"] = data["experiment"].str.extract(r"q(\d{3})$")[0].astype(int) / 10
+    data["kaggle_public_score"] = data["kaggle_public_score"].astype(float)
+    data = data.sort_values("quantile")
+
+    fig, ax = plt.subplots(figsize=(7.8, 4.6))
+    ax.plot(data["quantile"], data["kaggle_public_score"], marker="o", linewidth=2.2, color="#2563eb")
+    best = data.loc[data["kaggle_public_score"].idxmin()]
+    ax.scatter([best["quantile"]], [best["kaggle_public_score"]], s=90, color="#dc2626", zorder=3)
+
+    for _, row in data.iterrows():
+        ax.annotate(
+            f"{row['kaggle_public_score']:.5f}",
+            (row["quantile"], row["kaggle_public_score"]),
+            textcoords="offset points",
+            xytext=(0, 9),
+            ha="center",
+            fontsize=9,
+        )
+
+    ax.set_title("High-Price Clipping Threshold Sweep")
+    ax.set_xlabel("Training SalePrice clipping quantile (%)")
+    ax.set_ylabel("Public Score (lower is better)")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(FIGURE_DIR / "clipping_threshold_curve.png", dpi=180)
+    plt.close(fig)
+
+
+def _plot_te_blend_comparison(log: pd.DataFrame) -> None:
+    score_by_experiment = (
+        log.dropna(subset=["kaggle_public_score"])
+        .assign(kaggle_public_score=lambda df: df["kaggle_public_score"].astype(float))
+        .set_index("experiment")["kaggle_public_score"]
+    )
+    rows = [
+        ("Weighted\nraw", "20260507_te_weighted_blend"),
+        ("Conservative\nraw", "20260507_te_conservative_blend"),
+        ("Weighted\nq993", "20260507_te_weighted_blend_clip_q993"),
+        ("Conservative\nq993", "20260507_te_conservative_blend_clip_q993"),
+        ("Simple\nq993", "20260507_te_simple_blend_clip_q993"),
+        ("Weighted\nmix", "20260507_te_weighted_blend_mix_current_best_clip_q993"),
+        ("Conservative\nmix", "20260507_te_conservative_blend_mix_current_best_clip_q993"),
+        ("Simple\nmix", "20260507_te_simple_blend_mix_current_best_clip_q993"),
+    ]
+    data = pd.DataFrame(
+        [{"label": label, "score": score_by_experiment.loc[experiment]} for label, experiment in rows]
+    )
+    colors = [
+        "#64748b",
+        "#64748b",
+        "#2563eb",
+        "#2563eb",
+        "#2563eb",
+        "#0f766e",
+        "#0f766e",
+        "#dc2626",
+    ]
+
+    fig, ax = plt.subplots(figsize=(9.4, 4.8))
+    bars = ax.bar(data["label"], data["score"], color=colors)
+    ax.set_title("Target Encoding Candidate Comparison")
+    ax.set_ylabel("Public Score (lower is better)")
+    ax.grid(axis="y", alpha=0.25)
+    ax.set_ylim(data["score"].min() - 0.0008, data["score"].max() + 0.0006)
+
+    for bar, value in zip(bars, data["score"]):
+        ax.annotate(
+            f"{value:.5f}",
+            (bar.get_x() + bar.get_width() / 2, value),
+            textcoords="offset points",
+            xytext=(0, 5),
+            ha="center",
+            fontsize=8,
+        )
+
+    fig.tight_layout()
+    fig.savefig(FIGURE_DIR / "target_encoding_candidate_comparison.png", dpi=180)
     plt.close(fig)
 
 

@@ -354,7 +354,7 @@ Kaggle 使用 RMSLE 作为评价指标。由于 RMSLE 等价于对价格取 log 
 
 - `20260507_te_conservative_blend_clip_q993.csv`：`0.11802`
 - `20260507_te_weighted_blend_mix_current_best_clip_q993.csv`：`0.11774`
-- `20260507_te_conservative_blend_mix_current_best_clip_q993.csv`：`0.11765`
+- `20260507_te_simple_blend_mix_current_best_clip_q993.csv`：`0.11758`
 
 ### 7.5 实验结果总表
 
@@ -366,7 +366,7 @@ Kaggle 使用 RMSLE 作为评价指标。由于 RMSLE 等价于对价格取 log 
 | 高级融合 | optimized blend | 0.12173 | 高级特征有效，但高价尾部偏高 |
 | 高级融合 + 裁剪 | optimized clipped | 0.11865 | 裁剪显著改善 |
 | 高价校准 | q993 clipping | 0.11805 | q993 是较优高价控制点 |
-| TE 增量融合 | TE conservative mix | 0.11765 | 当前最好，TE 提供互补信息 |
+| TE 增量融合 | TE simple mix | 0.11758 | 当前最好，TE 提供互补信息 |
 
 ## 8. 最终方案
 
@@ -374,11 +374,11 @@ Kaggle 使用 RMSLE 作为评价指标。由于 RMSLE 等价于对价格取 log 
 
 最终文件：
 
-`20260507_te_conservative_blend_mix_current_best_clip_q993.csv`
+`20260507_te_simple_blend_mix_current_best_clip_q993.csv`
 
 Public Score：
 
-`0.11765`
+`0.11758`
 
 ### 8.2 最终方案组成
 

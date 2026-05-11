@@ -39,6 +39,8 @@
 - `figures/public_score_progress.png`：关键阶段 Public Score 迭代折线图。
 - `figures/score_improvement_by_stage.png`：关键操作带来的分数改善柱状图。
 - `figures/submitted_candidate_ranking.png`：所有已提交候选的 Public Score 排名图。
+- `figures/clipping_threshold_curve.png`：高价裁剪分位数校准曲线。
+- `figures/target_encoding_candidate_comparison.png`：Target Encoding 候选方案对比图。
 
 重新生成命令：
 

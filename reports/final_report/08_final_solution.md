@@ -5,16 +5,16 @@
 经过多轮实验对比后，本项目最终选择以下文件作为阶段最终提交：
 
 ```text
-submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+submissions/model_redesign_20260507/target_encoding/20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 该文件在 Kaggle Public Leaderboard 上取得的 Public Score 为：
 
 ```text
-0.11765
+0.11758
 ```
 
-这是当前项目中已经提交并获得反馈的最好成绩。相比初始 baseline 的 `0.12859`，最终方案累计提升 `0.01094`。从实验过程看，该成绩并不是单一模型或单一技巧带来的，而是由稳定的数据预处理、领域特征工程、多模型融合、高价预测裁剪、Target Encoding 和 log 空间融合共同作用得到的。
+这是当前项目中已经提交并获得反馈的最好成绩。相比初始 baseline 的 `0.12859`，最终方案累计提升 `0.01101`。从实验过程看，该成绩并不是单一模型或单一技巧带来的，而是由稳定的数据预处理、领域特征工程、多模型融合、高价预测裁剪、Target Encoding 和 log 空间融合共同作用得到的。
 
 ## 8.2 最终方案整体流程
 
@@ -28,7 +28,7 @@ submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_ble
   -> 多模型训练与 OOF 融合
   -> q993 高价硬裁剪
   -> OOF Target Encoding 模型族训练
-  -> TE 保守融合与上一轮最优结果 50/50 log 融合
+  -> TE 简单融合与上一轮最优结果 50/50 log 融合
   -> 生成 Kaggle 提交文件
 ```
 
@@ -104,13 +104,13 @@ submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_ble
 
 为避免目标泄漏，训练集 Target Encoding 使用 OOF 方式生成。测试集则使用完整训练集统计，并通过平滑处理降低小样本类别的波动。
 
-Target Encoding 独立方案中，`te_conservative_blend_clip_q993.csv` 的 Public Score 达到：
+Target Encoding 独立方案中，`te_simple_blend_clip_q993.csv` 的 Public Score 达到：
 
 ```text
-0.11802
+0.11794
 ```
 
-这一结果已经略优于上一轮 q993 裁剪方案的 `0.11805`。更重要的是，当 TE 保守融合结果与上一轮最好结果做 50/50 log 融合后，Public Score 进一步提升到 `0.11765`。
+这一结果已经略优于上一轮 q993 裁剪方案的 `0.11805`。更重要的是，当 TE simple blend 结果与上一轮最好结果做 50/50 log 融合后，Public Score 进一步提升到 `0.11758`。
 
 这说明 Target Encoding 提供了与原有高级特征体系不同的增量信息。它不是单独大幅替代原方案，而是作为互补信号参与最终融合。
 
@@ -119,12 +119,12 @@ Target Encoding 独立方案中，`te_conservative_blend_clip_q993.csv` 的 Publ
 最终提交文件来自两个较强方案的 log 空间融合：
 
 1. 上一轮最好结果：`20260507_opt_clip_q993.csv`。
-2. Target Encoding 保守融合裁剪结果：`20260507_te_conservative_blend_clip_q993.csv`。
+2. Target Encoding 简单融合裁剪结果：`20260507_te_simple_blend_clip_q993.csv`。
 
 融合方式为：
 
 ```text
-final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative))
+final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_simple))
 ```
 
 融合后继续保持 q993 高价上限。该方式有两个优点：
@@ -132,7 +132,7 @@ final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative
 1. 融合在 log 价格尺度上进行，与 RMSLE 指标更一致。
 2. 两个输入方案来自不同特征体系，具有一定互补性。
 
-最终结果 `0.11765` 说明该融合确实带来了有效增量。
+最终结果 `0.11758` 说明该融合确实带来了有效增量。
 
 ## 8.9 为什么选择该方案
 
@@ -148,7 +148,7 @@ final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative
 
 ## 8.10 本章小结
 
-最终方案可以概括为“高级特征工程 + 多模型融合 + q993 高价裁剪 + OOF Target Encoding + 50/50 log 融合”。该方案在 Kaggle Public Leaderboard 上取得 `0.11765`，是当前项目中最好的提交结果。它既有较好的实际分数，也能从数据处理、特征构造和模型融合角度给出清晰解释。
+最终方案可以概括为“高级特征工程 + 多模型融合 + q993 高价裁剪 + OOF Target Encoding + 50/50 log 融合”。该方案在 Kaggle Public Leaderboard 上取得 `0.11758`，是当前项目中最好的提交结果。它既有较好的实际分数，也能从数据处理、特征构造和模型融合角度给出清晰解释。
 
 ## 8.11 本章引用材料
 

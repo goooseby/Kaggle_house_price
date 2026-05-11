@@ -117,7 +117,7 @@ CatBoost 是面向类别特征友好的梯度提升模型。本项目当前版�
 - `te_lightgbm`
 - `te_catboost`
 
-这一模型族的目的不是简单替代上一轮模型，而是检验类别均值编码是否能提供新的误差信息。实验结果显示，TE 单模型并没有全面超过上一轮高级特征模型，但 TE 融合结果与上一轮最好提交做 50/50 log 融合后，Public Score 从 `0.11805` 提升到 `0.11765`。
+这一模型族的目的不是简单替代上一轮模型，而是检验类别均值编码是否能提供新的误差信息。实验结果显示，TE 单模型并没有全面超过上一轮高级特征模型，但 TE 融合结果与上一轮最好提交做 50/50 log 融合后，Public Score 从 `0.11805` 提升到 `0.11758`。
 
 这说明 Target Encoding 在本项目中的主要价值是提供增量信号，而不是单独成为最强模型。
 
@@ -159,22 +159,22 @@ Ridge Stacking 使用二层 Ridge 模型学习各个基础模型预测之间的�
 
 本项目中 Ridge Stacking 的本地 CV 看似较好，但 Public Score 并不最优，因此主要作为诊断参考，而不是最终首选方案。
 
-### 6.7.5 保守融合与 log 融合
+### 6.7.5 TE 融合与 log 融合
 
-在后期实验中，项目采用了更保守的融合策略。例如 Target Encoding 实验中的 `te_conservative_blend` 使用 50% 等权融合与 50% 优化权重融合，以降低权重优化过拟合风险。
+在后期实验中，项目比较了多种 TE 融合策略。`te_weighted_blend` 追求 OOF 权重优化，`te_conservative_blend` 使用 50% 等权融合与 50% 优化权重融合，而 `te_simple_blend` 直接使用核心模型等权平均。
 
-此外，最终最好方案使用了当前 TE 保守融合结果与上一轮最优提交的 50/50 log 融合。该方法不是在原始价格上平均，而是在 log 价格尺度上融合，更符合 RMSLE 评价逻辑。
+Kaggle 反馈显示，最终最好方案来自 TE simple blend 与上一轮最优提交的 50/50 log 融合。该方法不是在原始价格上平均，而是在 log 价格尺度上融合，更符合 RMSLE 评价逻辑。
 
 最终文件：
 
 ```text
-20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 Public Score：
 
 ```text
-0.11765
+0.11758
 ```
 
 ## 6.8 模型选择逻辑

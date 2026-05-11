@@ -2,7 +2,7 @@
 
 ## 9.1 项目总结
 
-本项目围绕 Kaggle House Prices 房价预测任务，完成了从数据理解、探索性分析、数据预处理、特征工程、模型训练、模型融合到结果提交的完整流程。最终方案在 Kaggle Public Leaderboard 上取得 `0.11765` 的 Public Score，明显优于初始 baseline 的 `0.12859`。
+本项目围绕 Kaggle House Prices 房价预测任务，完成了从数据理解、探索性分析、数据预处理、特征工程、模型训练、模型融合到结果提交的完整流程。最终方案在 Kaggle Public Leaderboard 上取得 `0.11758` 的 Public Score，明显优于初始 baseline 的 `0.12859`。
 
 从项目过程看，最终成绩的提升并不是依赖某一个单独技巧，而是来自多个环节的累积改进：
 
@@ -36,7 +36,7 @@
 
 ### 9.2.5 Target Encoding 提供了有效增量
 
-Target Encoding 独立方案的提升不算巨大，但它与上一轮最优方案做 log 融合后，Public Score 从 `0.11805` 提升到 `0.11765`。这说明类别变量中的目标均值信息与原有 one-hot 和人工特征体系存在互补性。对类别变量丰富的数据集，OOF Target Encoding 是值得尝试的方向。
+Target Encoding 独立方案的提升不算巨大，但它与上一轮最优方案做 log 融合后，Public Score 从 `0.11805` 提升到 `0.11758`。这说明类别变量中的目标均值信息与原有 one-hot 和人工特征体系存在互补性。对类别变量丰富的数据集，OOF Target Encoding 是值得尝试的方向。
 
 ### 9.2.6 融合比单模型更稳定
 
@@ -50,7 +50,7 @@ Target Encoding 独立方案的提升不算巨大，但它与上一轮最优方�
 
 ### 9.3.2 Public Leaderboard 只代表测试集的一部分
 
-本项目主要依据 Kaggle Public Score 判断方案优劣。但 Public Leaderboard 只基于测试集的一部分，不能完全等同于最终私榜表现。因此，当前 `0.11765` 是阶段性最好结果，而不是对所有未知数据的绝对保证。
+本项目主要依据 Kaggle Public Score 判断方案优劣。但 Public Leaderboard 只基于测试集的一部分，不能完全等同于最终私榜表现。因此，当前 `0.11758` 是阶段性最好结果，而不是对所有未知数据的绝对保证。
 
 ### 9.3.3 未使用外部数据
 

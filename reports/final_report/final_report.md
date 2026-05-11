@@ -56,13 +56,13 @@ RMSLE = sqrt(mean((log(1 + y_pred) - log(1 + y_true))^2))
 项目经过多轮实验后，最终采用了高级特征工程、多模型融合、高价尾部裁剪、OOF Target Encoding 和当前最好方案的 50/50 log 融合。当前最佳提交文件为：
 
 ```text
-20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 对应 Kaggle Public Score 为：
 
 ```text
-0.11765
+0.11758
 ```
 
 这一结果已经明显优于最初 baseline 的 `0.12859`。从实验过程看，主要有效改进来自目标变量 log 变换、高级特征工程、多模型融合、高价尾部控制，以及 Target Encoding 提供的增量信息。
@@ -704,7 +704,7 @@ EDA 显示，`OverallQual` 是与房价关系最强的单一特征。质量对�
 - 单字段 TE：`Neighborhood`、`MSSubClass`、`HouseStyle`、`SaleType`、`SaleCondition` 等。
 - 组合字段 TE：`Neighborhood + OverallQual`、`Neighborhood + MSSubClass`、`OverallQual + KitchenQual` 等。
 
-实验结果显示，TE 单独方案提升有限，但与上一轮最好方案进行 50/50 log 融合后取得了当前最好 Public Score `0.11765`。这说明 TE 特征提供了与原有模型不同的误差信息，具有一定增量价值。
+实验结果显示，TE 单独方案提升有限，但与上一轮最好方案进行 50/50 log 融合后取得了当前最好 Public Score `0.11758`。这说明 TE 特征提供了与原有模型不同的误差信息，具有一定增量价值。
 
 对应代码与报告：
 
@@ -715,7 +715,7 @@ EDA 显示，`OverallQual` 是与房价关系最强的单一特征。质量对�
 
 正式建模时，基础高级预处理矩阵包含 447 个特征；在 Target Encoding 实验中，额外加入 20 个 TE 特征。特征工程使模型不再只依赖原始字段，而是能够同时利用房屋规模、质量、结构、位置、年份、设施和类别价格水平等信息。
 
-从实验结果看，特征工程对模型提升有明显贡献：baseline Public Score 为 `0.12859`，而在高级特征和多模型融合后，成绩提升到 `0.11865`；进一步加入高价校准和 TE 融合后，最终达到 `0.11765`。
+从实验结果看，特征工程对模型提升有明显贡献：baseline Public Score 为 `0.12859`，而在高级特征和多模型融合后，成绩提升到 `0.11865`；进一步加入高价校准和 TE 融合后，最终达到 `0.11758`。
 
 ## 5.10 本章小结
 
@@ -841,7 +841,7 @@ CatBoost 是面向类别特征友好的梯度提升模型。本项目当前版�
 - `te_lightgbm`
 - `te_catboost`
 
-这一模型族的目的不是简单替代上一轮模型，而是检验类别均值编码是否能提供新的误差信息。实验结果显示，TE 单模型并没有全面超过上一轮高级特征模型，但 TE 融合结果与上一轮最好提交做 50/50 log 融合后，Public Score 从 `0.11805` 提升到 `0.11765`。
+这一模型族的目的不是简单替代上一轮模型，而是检验类别均值编码是否能提供新的误差信息。实验结果显示，TE 单模型并没有全面超过上一轮高级特征模型，但 TE 融合结果与上一轮最好提交做 50/50 log 融合后，Public Score 从 `0.11805` 提升到 `0.11758`。
 
 这说明 Target Encoding 在本项目中的主要价值是提供增量信号，而不是单独成为最强模型。
 
@@ -883,22 +883,22 @@ Ridge Stacking 使用二层 Ridge 模型学习各个基础模型预测之间的�
 
 本项目中 Ridge Stacking 的本地 CV 看似较好，但 Public Score 并不最优，因此主要作为诊断参考，而不是最终首选方案。
 
-### 6.7.5 保守融合与 log 融合
+### 6.7.5 TE 融合与 log 融合
 
-在后期实验中，项目采用了更保守的融合策略。例如 Target Encoding 实验中的 `te_conservative_blend` 使用 50% 等权融合与 50% 优化权重融合，以降低权重优化过拟合风险。
+在后期实验中，项目比较了多种 TE 融合策略。`te_weighted_blend` 追求 OOF 权重优化，`te_conservative_blend` 使用 50% 等权融合与 50% 优化权重融合，而 `te_simple_blend` 直接使用核心模型等权平均。
 
-此外，最终最好方案使用了当前 TE 保守融合结果与上一轮最优提交的 50/50 log 融合。该方法不是在原始价格上平均，而是在 log 价格尺度上融合，更符合 RMSLE 评价逻辑。
+Kaggle 反馈显示，最终最好方案来自 TE simple blend 与上一轮最优提交的 50/50 log 融合。该方法不是在原始价格上平均，而是在 log 价格尺度上融合，更符合 RMSLE 评价逻辑。
 
 最终文件：
 
 ```text
-20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 Public Score：
 
 ```text
-0.11765
+0.11758
 ```
 
 ## 6.8 模型选择逻辑
@@ -928,7 +928,7 @@ Public Score：
 
 ## 7.2 实验结果总览
 
-从初始 baseline 到最终方案，Public Score 从 `0.12859` 提升到 `0.11765`。主要结果如下表所示。
+从初始 baseline 到最终方案，Public Score 从 `0.12859` 提升到 `0.11758`。主要结果如下表所示。
 
 ![关键阶段 Kaggle Public Score 变化](figures/public_score_progress.png)
 
@@ -938,8 +938,8 @@ Public Score：
 | 高级特征与多模型融合 | 高级特征工程 + optimized weight blend | 0.12173 | -0.00686 | 高级预处理、更多模型和 OOF 权重融合显著优于 baseline |
 | 高级融合后高价裁剪 | optimized weight blend + q997 附近裁剪 | 0.11865 | -0.00308 | 对过高预测做上限控制后，Kaggle 分数明显改善 |
 | 高价校准 | optimized weight blend + q993 硬裁剪 | 0.11805 | -0.00060 | q993 是本轮测试中更合适的高价上限 |
-| Target Encoding 独立方案 | TE conservative blend + q993 裁剪 | 0.11802 | -0.00003 | OOF Target Encoding 作为独立方案略优于上一轮 q993 裁剪 |
-| 最终融合方案 | TE conservative blend 与上一轮最优做 50/50 log 融合 | 0.11765 | -0.00037 | TE 与上一轮最优方案存在互补性，融合后取得当前最好成绩 |
+| Target Encoding 独立方案 | TE simple blend + q993 裁剪 | 0.11794 | -0.00011 | OOF Target Encoding 简单融合配合 q993 裁剪后略优于上一轮 q993 裁剪 |
+| 最终融合方案 | TE simple blend 与上一轮最优做 50/50 log 融合 | 0.11758 | -0.00036 | TE 与上一轮最优方案存在互补性，简单 TE 融合后取得当前最好成绩 |
 
 从阶段贡献看，高级特征工程与多模型融合带来了最大幅度提升；高价裁剪是第二个明显有效的改进；随后 q993 阈值校准和 Target Encoding 融合带来较小但真实的增量。
 
@@ -1028,9 +1028,13 @@ Kaggle Public Score 为：
 | `20260507_opt_clip_q990.csv` | 训练集 99.0% 分位数 | 0.11841 |
 | `20260507_opt_clip_q993.csv` | 训练集 99.3% 分位数 | 0.11805 |
 | `20260507_opt_clip_q995.csv` | 训练集 99.5% 分位数 | 0.11818 |
+| `20260507_opt_clip_q997.csv` | 训练集 99.7% 分位数 | 0.11865 |
+| `20260507_opt_clip_q999.csv` | 训练集 99.9% 分位数 | 0.11996 |
 | `20260507_opt_soft_q995_s035.csv` | q995 以上软压缩 | 0.11947 |
 
-结果表明，硬裁剪优于软压缩；在已提交的硬裁剪方案中，q993 上限效果最好。q990 的分数变差，说明裁剪不是越强越好，测试集中仍然可能存在真实高价房；q995 又略差于 q993，说明原模型仍有一定高价过估。综合来看，q993 是这一阶段最合适的全局高价上限。
+![高价裁剪分位数对 Public Score 的影响](figures/clipping_threshold_curve.png)
+
+结果表明，硬裁剪优于软压缩；在已提交的硬裁剪方案中，q993 上限效果最好。q990 的分数变差，说明裁剪不是越强越好，测试集中仍然可能存在真实高价房；q995、q997 和 q999 逐步放松上限后分数也变差，说明原模型仍有明显高价过估。综合来看，q993 是这一阶段最合适的全局高价上限。
 
 这一阶段的最好文件为：
 
@@ -1060,12 +1064,20 @@ TE 相关提交结果如下：
 
 | 提交文件 | Public Score | 说明 |
 | --- | ---: | --- |
+| `20260507_te_weighted_blend.csv` | 0.12076 | 未裁剪 TE 优化权重融合，高价尾部控制不足 |
+| `20260507_te_conservative_blend.csv` | 0.12044 | 未裁剪 TE 保守融合，仍明显差于裁剪版本 |
 | `20260507_te_weighted_blend_clip_q993.csv` | 0.11819 | 纯 TE 优化权重融合，略差于上一轮最好 |
 | `20260507_te_conservative_blend_clip_q993.csv` | 0.11802 | 纯 TE 保守融合，略优于上一轮 q993 方案 |
+| `20260507_te_simple_blend_clip_q993.csv` | 0.11794 | 纯 TE 简单融合，是当前最好的独立 TE 方案 |
 | `20260507_te_weighted_blend_mix_current_best_clip_q993.csv` | 0.11774 | TE weighted 与上一轮最好方案做 50/50 log 融合 |
-| `20260507_te_conservative_blend_mix_current_best_clip_q993.csv` | 0.11765 | 当前最好成绩 |
+| `20260507_te_conservative_blend_mix_current_best_clip_q993.csv` | 0.11765 | TE conservative 与上一轮最好方案做 50/50 log 融合 |
+| `20260507_te_simple_blend_mix_current_best_clip_q993.csv` | 0.11758 | 当前最好成绩 |
 
-从结果看，Target Encoding 作为独立方案已经能达到 `0.11802`，略优于上一轮 `0.11805`。更重要的是，当 TE 方案与上一轮最好方案做 50/50 log 融合后，Public Score 进一步提升到 `0.11765`。这说明 TE 捕捉到的类别价格水平信息与原有高级特征融合方案存在互补性。
+![Target Encoding 候选方案对比](figures/target_encoding_candidate_comparison.png)
+
+从结果看，Target Encoding 作为独立方案已经能达到 `0.11794`，略优于上一轮 `0.11805`。更重要的是，当 TE 方案与上一轮最好方案做 50/50 log 融合后，Public Score 进一步提升到 `0.11758`。这说明 TE 捕捉到的类别价格水平信息与原有高级特征融合方案存在互补性。
+
+这一组补充提交还修正了一个更细的判断：最终最好的不是本地 CV 更低的 weighted TE，也不是折中的 conservative TE，而是 simple TE 融合。说明在小样本表格任务中，OOF 权重优化未必带来最好的线上泛化；更均衡的简单融合反而可能保留更多互补误差信号。
 
 因此，本项目对 Target Encoding 的结论是：TE 不是简单替代原方案的“大幅单独提升”，但它作为互补特征体系确实带来了实际分数提升，是最终方案中的关键组成部分。
 
@@ -1074,25 +1086,25 @@ TE 相关提交结果如下：
 最终最好提交文件为：
 
 ```text
-submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+submissions/model_redesign_20260507/target_encoding/20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 Public Score 为：
 
 ```text
-0.11765
+0.11758
 ```
 
 与 baseline 相比，分数变化为：
 
 ```text
-0.12859 -> 0.11765
+0.12859 -> 0.11758
 ```
 
 累计改善：
 
 ```text
-0.01094
+0.01101
 ```
 
 从实验路径看，真正对结果产生影响的操作主要包括：
@@ -1100,8 +1112,8 @@ Public Score 为：
 1. 高级预处理和特征工程，使模型从 `0.12859` 提升到约 `0.121`。
 2. 多模型融合，使不同模型误差互补，形成比单模型更稳的提交。
 3. 高价硬裁剪，使 `optimized_weight_blend` 从 `0.12173` 提升到 `0.11865`，并通过 q993 校准进一步提升到 `0.11805`。
-4. OOF Target Encoding 捕捉类别价格水平信息，使纯 TE 保守融合达到 `0.11802`。
-5. TE 方案与上一轮最优方案做 50/50 log 融合，最终达到 `0.11765`。
+4. OOF Target Encoding 捕捉类别价格水平信息，使纯 TE simple blend + q993 裁剪达到 `0.11794`。
+5. TE 方案与上一轮最优方案做 50/50 log 融合，最终达到 `0.11758`。
 
 这些结果表明，本项目的分数提升并不是由单一复杂模型带来的，而是由数据理解、特征工程、模型融合、预测后处理和类别信息增量共同作用形成的。
 
@@ -1109,7 +1121,7 @@ Public Score 为：
 
 本章按照实验顺序回顾了从 baseline 到最终方案的主要改进。实验结果显示，单纯增加模型复杂度并不足以得到最好成绩；真正有效的路径是先建立稳健的预处理和多模型融合体系，再根据 Kaggle 反馈对高价尾部进行裁剪校准，最后利用 Target Encoding 提供新的类别信息增量。
 
-最终方案的 Kaggle Public Score 为 `0.11765`，明显优于初始 baseline 的 `0.12859`。这一结果说明本项目形成了一条较完整、可复现且实际有效的房价预测建模流程。
+最终方案的 Kaggle Public Score 为 `0.11758`，明显优于初始 baseline 的 `0.12859`。这一结果说明本项目形成了一条较完整、可复现且实际有效的房价预测建模流程。
 
 
 # 8. 最终方案
@@ -1119,16 +1131,16 @@ Public Score 为：
 经过多轮实验对比后，本项目最终选择以下文件作为阶段最终提交：
 
 ```text
-submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+submissions/model_redesign_20260507/target_encoding/20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 该文件在 Kaggle Public Leaderboard 上取得的 Public Score 为：
 
 ```text
-0.11765
+0.11758
 ```
 
-这是当前项目中已经提交并获得反馈的最好成绩。相比初始 baseline 的 `0.12859`，最终方案累计提升 `0.01094`。从实验过程看，该成绩并不是单一模型或单一技巧带来的，而是由稳定的数据预处理、领域特征工程、多模型融合、高价预测裁剪、Target Encoding 和 log 空间融合共同作用得到的。
+这是当前项目中已经提交并获得反馈的最好成绩。相比初始 baseline 的 `0.12859`，最终方案累计提升 `0.01101`。从实验过程看，该成绩并不是单一模型或单一技巧带来的，而是由稳定的数据预处理、领域特征工程、多模型融合、高价预测裁剪、Target Encoding 和 log 空间融合共同作用得到的。
 
 ## 8.2 最终方案整体流程
 
@@ -1142,7 +1154,7 @@ submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_ble
   -> 多模型训练与 OOF 融合
   -> q993 高价硬裁剪
   -> OOF Target Encoding 模型族训练
-  -> TE 保守融合与上一轮最优结果 50/50 log 融合
+  -> TE 简单融合与上一轮最优结果 50/50 log 融合
   -> 生成 Kaggle 提交文件
 ```
 
@@ -1218,13 +1230,13 @@ submissions/model_redesign_20260507/target_encoding/20260507_te_conservative_ble
 
 为避免目标泄漏，训练集 Target Encoding 使用 OOF 方式生成。测试集则使用完整训练集统计，并通过平滑处理降低小样本类别的波动。
 
-Target Encoding 独立方案中，`te_conservative_blend_clip_q993.csv` 的 Public Score 达到：
+Target Encoding 独立方案中，`te_simple_blend_clip_q993.csv` 的 Public Score 达到：
 
 ```text
-0.11802
+0.11794
 ```
 
-这一结果已经略优于上一轮 q993 裁剪方案的 `0.11805`。更重要的是，当 TE 保守融合结果与上一轮最好结果做 50/50 log 融合后，Public Score 进一步提升到 `0.11765`。
+这一结果已经略优于上一轮 q993 裁剪方案的 `0.11805`。更重要的是，当 TE simple blend 结果与上一轮最好结果做 50/50 log 融合后，Public Score 进一步提升到 `0.11758`。
 
 这说明 Target Encoding 提供了与原有高级特征体系不同的增量信息。它不是单独大幅替代原方案，而是作为互补信号参与最终融合。
 
@@ -1233,12 +1245,12 @@ Target Encoding 独立方案中，`te_conservative_blend_clip_q993.csv` 的 Publ
 最终提交文件来自两个较强方案的 log 空间融合：
 
 1. 上一轮最好结果：`20260507_opt_clip_q993.csv`。
-2. Target Encoding 保守融合裁剪结果：`20260507_te_conservative_blend_clip_q993.csv`。
+2. Target Encoding 简单融合裁剪结果：`20260507_te_simple_blend_clip_q993.csv`。
 
 融合方式为：
 
 ```text
-final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative))
+final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_simple))
 ```
 
 融合后继续保持 q993 高价上限。该方式有两个优点：
@@ -1246,7 +1258,7 @@ final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative
 1. 融合在 log 价格尺度上进行，与 RMSLE 指标更一致。
 2. 两个输入方案来自不同特征体系，具有一定互补性。
 
-最终结果 `0.11765` 说明该融合确实带来了有效增量。
+最终结果 `0.11758` 说明该融合确实带来了有效增量。
 
 ## 8.9 为什么选择该方案
 
@@ -1262,14 +1274,14 @@ final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative
 
 ## 8.10 本章小结
 
-最终方案可以概括为“高级特征工程 + 多模型融合 + q993 高价裁剪 + OOF Target Encoding + 50/50 log 融合”。该方案在 Kaggle Public Leaderboard 上取得 `0.11765`，是当前项目中最好的提交结果。它既有较好的实际分数，也能从数据处理、特征构造和模型融合角度给出清晰解释。
+最终方案可以概括为“高级特征工程 + 多模型融合 + q993 高价裁剪 + OOF Target Encoding + 50/50 log 融合”。该方案在 Kaggle Public Leaderboard 上取得 `0.11758`，是当前项目中最好的提交结果。它既有较好的实际分数，也能从数据处理、特征构造和模型融合角度给出清晰解释。
 
 
 # 9. 总结与反思
 
 ## 9.1 项目总结
 
-本项目围绕 Kaggle House Prices 房价预测任务，完成了从数据理解、探索性分析、数据预处理、特征工程、模型训练、模型融合到结果提交的完整流程。最终方案在 Kaggle Public Leaderboard 上取得 `0.11765` 的 Public Score，明显优于初始 baseline 的 `0.12859`。
+本项目围绕 Kaggle House Prices 房价预测任务，完成了从数据理解、探索性分析、数据预处理、特征工程、模型训练、模型融合到结果提交的完整流程。最终方案在 Kaggle Public Leaderboard 上取得 `0.11758` 的 Public Score，明显优于初始 baseline 的 `0.12859`。
 
 从项目过程看，最终成绩的提升并不是依赖某一个单独技巧，而是来自多个环节的累积改进：
 
@@ -1303,7 +1315,7 @@ final = expm1(0.5 * log1p(pred_previous_best) + 0.5 * log1p(pred_te_conservative
 
 ### 9.2.5 Target Encoding 提供了有效增量
 
-Target Encoding 独立方案的提升不算巨大，但它与上一轮最优方案做 log 融合后，Public Score 从 `0.11805` 提升到 `0.11765`。这说明类别变量中的目标均值信息与原有 one-hot 和人工特征体系存在互补性。对类别变量丰富的数据集，OOF Target Encoding 是值得尝试的方向。
+Target Encoding 独立方案的提升不算巨大，但它与上一轮最优方案做 log 融合后，Public Score 从 `0.11805` 提升到 `0.11758`。这说明类别变量中的目标均值信息与原有 one-hot 和人工特征体系存在互补性。对类别变量丰富的数据集，OOF Target Encoding 是值得尝试的方向。
 
 ### 9.2.6 融合比单模型更稳定
 
@@ -1317,7 +1329,7 @@ Target Encoding 独立方案的提升不算巨大，但它与上一轮最优方�
 
 ### 9.3.2 Public Leaderboard 只代表测试集的一部分
 
-本项目主要依据 Kaggle Public Score 判断方案优劣。但 Public Leaderboard 只基于测试集的一部分，不能完全等同于最终私榜表现。因此，当前 `0.11765` 是阶段性最好结果，而不是对所有未知数据的绝对保证。
+本项目主要依据 Kaggle Public Score 判断方案优劣。但 Public Leaderboard 只基于测试集的一部分，不能完全等同于最终私榜表现。因此，当前 `0.11758` 是阶段性最好结果，而不是对所有未知数据的绝对保证。
 
 ### 9.3.3 未使用外部数据
 

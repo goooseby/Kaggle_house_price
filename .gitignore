@@ -21,6 +21,8 @@ outputs/
 submissions/*.csv
 submissions/**/*.csv
 reports/generated/
+reports/final_report.zip
+reports/final_report/排名结果*.png
 
 # OS files
 .DS_Store

@@ -26,15 +26,19 @@
 
 ## 选择原则
 
-最终以 Kaggle Public Score 判断好坏；提交时优先考虑 `conservative`、`weighted`、`clip_q993` 和 `mix_current_best` 这些更稳的版本。
+最终以 Kaggle Public Score 判断好坏。补充提交后，`simple` 融合反而优于 `weighted` 和 `conservative`；更稳定的选择是 `clip_q993` 版本，以及它们与上一轮最好方案的 `mix_current_best` 版本。
 
 ## Public Score 反馈
 
 | 文件 | Public Score |
 | --- | --- |
+| `20260507_te_simple_blend_mix_current_best_clip_q993.csv` | `0.11758` |
 | `20260507_te_conservative_blend_mix_current_best_clip_q993.csv` | `0.11765` |
 | `20260507_te_weighted_blend_mix_current_best_clip_q993.csv` | `0.11774` |
+| `20260507_te_simple_blend_clip_q993.csv` | `0.11794` |
 | `20260507_te_conservative_blend_clip_q993.csv` | `0.11802` |
 | `20260507_te_weighted_blend_clip_q993.csv` | `0.11819` |
+| `20260507_te_conservative_blend.csv` | `0.12044` |
+| `20260507_te_weighted_blend.csv` | `0.12076` |
 
-结论：TE 纯模型提升有限，但与上一轮最好文件做 50/50 log 融合后带来了明确增量。
+结论：未裁剪 TE 版本明显受高价尾部影响；q993 裁剪后，纯 TE simple blend 已略优于上一轮 q993 最好方案。TE 与上一轮最好文件做 50/50 log 融合后带来了明确增量，其中 simple blend mix 得到当前最好 Public Score `0.11758`。

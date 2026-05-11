@@ -54,13 +54,13 @@ RMSLE = sqrt(mean((log(1 + y_pred) - log(1 + y_true))^2))
 项目经过多轮实验后，最终采用了高级特征工程、多模型融合、高价尾部裁剪、OOF Target Encoding 和当前最好方案的 50/50 log 融合。当前最佳提交文件为：
 
 ```text
-20260507_te_conservative_blend_mix_current_best_clip_q993.csv
+20260507_te_simple_blend_mix_current_best_clip_q993.csv
 ```
 
 对应 Kaggle Public Score 为：
 
 ```text
-0.11765
+0.11758
 ```
 
 这一结果已经明显优于最初 baseline 的 `0.12859`。从实验过程看，主要有效改进来自目标变量 log 变换、高级特征工程、多模型融合、高价尾部控制，以及 Target Encoding 提供的增量信息。

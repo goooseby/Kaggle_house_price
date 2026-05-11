@@ -2,8 +2,8 @@
 
 这是 Kaggle 入门题 **House Prices - Advanced Regression Techniques** 的本地实验项目。
 
-当前最好 Kaggle Public Score：`0.11765`  
-当前最好文件：`20260507_te_conservative_blend_mix_current_best_clip_q993.csv`
+当前最好 Kaggle Public Score：`0.11758`  
+当前最好文件：`20260507_te_simple_blend_mix_current_best_clip_q993.csv`
 
 ## 当前状态
 
@@ -12,9 +12,9 @@
 - baseline 建模与第一次提交：Public Score `0.12859`
 - 高级特征工程、OOF 融合与裁剪校准：最好到 `0.11805`
 - EDA 补充：完整报告、图表、统计表已落盘
-- Target Encoding 模型重设计实验：当前最好到 `0.11765`
+- Target Encoding 模型重设计实验：当前最好到 `0.11758`
 
-最新结论：Target Encoding 单独替代旧方案并不明显，但它和当前最好方案做 50/50 log 融合后带来了有效增量。
+最新结论：Target Encoding 单独替代旧方案的提升有限，但 q993 裁剪后的 TE simple blend 与上一轮最好方案做 50/50 log 融合后带来了当前最好成绩。
 
 ## 快速导航
 
@@ -59,8 +59,10 @@ Target Encoding 本轮已提交并验证：
 
 | 文件 | Public Score | 说明 |
 | --- | --- | --- |
-| `20260507_te_conservative_blend_mix_current_best_clip_q993.csv` | `0.11765` | 当前最好，TE 保守融合与旧最好方案 50/50 log 融合 |
+| `20260507_te_simple_blend_mix_current_best_clip_q993.csv` | `0.11758` | 当前最好，TE 简单融合与旧最好方案 50/50 log 融合 |
+| `20260507_te_conservative_blend_mix_current_best_clip_q993.csv` | `0.11765` | TE 保守融合与旧最好方案 50/50 log 融合 |
 | `20260507_te_weighted_blend_mix_current_best_clip_q993.csv` | `0.11774` | TE 优化权重融合与旧最好方案 50/50 log 融合 |
+| `20260507_te_simple_blend_clip_q993.csv` | `0.11794` | 纯 TE 简单融合 q993 裁剪 |
 | `20260507_te_conservative_blend_clip_q993.csv` | `0.11802` | 纯 TE 保守融合 q993 裁剪 |
 | `20260507_te_weighted_blend_clip_q993.csv` | `0.11819` | 纯 TE 优化权重融合 q993 裁剪 |
 

@@ -2,8 +2,8 @@
 
 本项目围绕 Kaggle House Prices 入门题，目标是用清晰、可复现的实验流程逐步提升提交分数，同时保留报告材料。
 
-当前最好 Public Score：`0.11765`  
-当前最好提交：`20260507_te_conservative_blend_mix_current_best_clip_q993.csv`
+当前最好 Public Score：`0.11758`  
+当前最好提交：`20260507_te_simple_blend_mix_current_best_clip_q993.csv`
 
 ## 常用入口
 
