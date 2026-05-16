@@ -41,6 +41,7 @@
 - `figures/submitted_candidate_ranking.png`：所有已提交候选的 Public Score 排名图。
 - `figures/clipping_threshold_curve.png`：高价裁剪分位数校准曲线。
 - `figures/target_encoding_candidate_comparison.png`：Target Encoding 候选方案对比图。
+- `figures/eda/`：第 3 章使用的 EDA 图表副本，使最终报告目录可以独立打包查看。
 
 重新生成命令：
 
