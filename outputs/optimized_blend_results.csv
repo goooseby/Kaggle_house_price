@@ -1,0 +1,5 @@
+blend,cv_rmse,models,weights
+ridge_stack,0.10516057799740884,"elastic_net,lasso,svr,ridge,kernel_ridge,catboost,xgboost",elastic_net:1.8662; lasso:-1.2643; svr:0.5883; ridge:-0.0639; kernel_ridge:-0.4761; catboost:0.0838; xgboost:0.2845
+optimized_weight_blend,0.10608631473616954,"elastic_net,lasso,svr,ridge,kernel_ridge,catboost,xgboost",elastic_net:0.3508; lasso:0.0000; svr:0.3307; ridge:0.0000; kernel_ridge:0.0000; catboost:0.0592; xgboost:0.2593
+simple_blend,0.10688516192987589,"elastic_net,lasso,svr,ridge,kernel_ridge,catboost,xgboost",elastic_net:0.1429; lasso:0.1429; svr:0.1429; ridge:0.1429; kernel_ridge:0.1429; catboost:0.1429; xgboost:0.1429
+inverse_cv_blend,0.10690598756023609,"elastic_net,lasso,svr,ridge,kernel_ridge,catboost,xgboost",elastic_net:0.1508; lasso:0.1498; svr:0.1466; ridge:0.1451; kernel_ridge:0.1398; catboost:0.1349; xgboost:0.1330

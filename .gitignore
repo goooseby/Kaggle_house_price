@@ -15,15 +15,10 @@ env/
 .idea/
 .vscode/
 
-# Kaggle raw data and generated artifacts
-house-prices-advanced-regression-techniques/
-outputs/
-submissions/*.csv
-submissions/**/*.csv
+# Local generated artifacts
 reports/generated/
 reports/final_report.zip
 reports/final_report.7z
-reports/final_report/排名结果*.png
 
 # OS files
 .DS_Store
