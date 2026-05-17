@@ -1,0 +1,7 @@
+stage,representative_solution,submission_file,kaggle_public_score,score_change_vs_previous_key_stage,main_effect
+Baseline,基础预处理与四模型平均融合,outputs/submission_baseline.csv,0.12859,,跑通完整建模与提交流程，建立初始参照
+高级特征与多模型融合,高级特征工程 + optimized weight blend,submissions/20260506_optimized_weight_blend.csv,0.12173,-0.00686,高级预处理、更多模型和 OOF 权重融合显著优于 baseline
+高级融合后高价裁剪,optimized weight blend + q997 附近裁剪,submissions/20260506_optimized_weight_blend_clipped.csv,0.11865,-0.00308,对过高预测做上限控制后，Kaggle 分数明显改善
+高价校准,optimized weight blend + q993 硬裁剪,submissions/calibration_20260507/20260507_opt_clip_q993.csv,0.11805,-0.00060,q993 是本轮测试中更合适的高价上限
+Target Encoding 独立方案,TE simple blend + q993 裁剪,submissions/model_redesign_20260507/target_encoding/20260507_te_simple_blend_clip_q993.csv,0.11794,-0.00011,OOF Target Encoding 简单融合配合 q993 裁剪后略优于上一轮 q993 裁剪
+最终融合方案,TE simple blend 与上一轮最优做 50/50 log 融合,submissions/model_redesign_20260507/target_encoding/20260507_te_simple_blend_mix_current_best_clip_q993.csv,0.11758,-0.00036,TE 与上一轮最优方案存在互补性，简单 TE 融合后取得当前最好成绩

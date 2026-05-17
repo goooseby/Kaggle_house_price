@@ -1,0 +1,9 @@
+﻿feature_group,feature_count,example_features
+房屋类型与 zoning,4,"MSSubClass, MSZoning, BldgType, HouseStyle"
+地块与位置,12,"LotFrontage, LotArea, Street, Alley, LotShape, LandContour, Utilities, LotConfig"
+建筑质量与材料,11,"OverallQual, OverallCond, RoofStyle, RoofMatl, Exterior1st, Exterior2nd, MasVnrType, MasVnrArea"
+地下室,9,"BsmtQual, BsmtCond, BsmtExposure, BsmtFinType1, BsmtFinSF1, BsmtFinType2, BsmtFinSF2, BsmtUnfSF"
+室内面积与功能,19,"Heating, HeatingQC, CentralAir, Electrical, 1stFlrSF, 2ndFlrSF, LowQualFinSF, GrLivArea"
+车库,7,"GarageType, GarageYrBlt, GarageFinish, GarageCars, GarageArea, GarageQual, GarageCond"
+外部设施,11,"PavedDrive, WoodDeckSF, OpenPorchSF, EnclosedPorch, 3SsnPorch, ScreenPorch, PoolArea, PoolQC"
+时间与交易,6,"YearBuilt, YearRemodAdd, MoSold, YrSold, SaleType, SaleCondition"
